@@ -6,9 +6,45 @@ Created on Tue Jul  4 05:23:01 2023
 """
 
 import os
-from pdf_utils03 import extract_pages_with_text
-from file_utils03 import get_file_info
 import PyPDF2
+from tkinter.filedialog import askopenfilename
+
+# to get file info
+
+
+def get_file_info():
+    file_path = askopenfilename(filetypes=[("PDF files", "*.pdf")])
+
+    if not file_path:
+        print("No file selected.")
+        return None, None, None, None
+
+    file_title = os.path.splitext(os.path.basename(file_path))[0]
+    num_pages = len(PyPDF2.PdfReader(file_path).pages)
+    size_bytes = os.path.getsize(file_path)
+    size_mb = round(size_bytes / (1024 * 1024), 2)
+
+    return file_path, file_title, num_pages, size_mb
+
+# to extract file
+
+
+def extract_pages_with_text(file_path, search_phrase):
+    pdf_reader = PyPDF2.PdfReader(file_path)
+    num_pages = len(pdf_reader.pages)
+    extracted_pages = []
+    found_pages = []
+
+    for page_num in range(num_pages):
+        page = pdf_reader.pages[page_num]
+        text = page.extract_text()
+
+        if search_phrase.lower() in text.lower():
+            extracted_pages.append(page)
+            found_pages.append(page_num + 1)
+
+    return extracted_pages, found_pages
+
 
 def main():
     file_path, file_title, num_pages, size_mb = get_file_info()
@@ -45,6 +81,7 @@ def main():
                 print("and", end=' ')
             print(f"{page_num}", end=', ')
         print()
+
 
 if __name__ == "__main__":
     main()
