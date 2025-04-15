@@ -18,3 +18,4 @@ This project is designed to test my knowledge of core Python. It reads a PDF fil
 
 # Future Improvements or Roadmap
 - Support for more file formats (e.g., DOCX, TXT).
+- AI?! 😄😉
